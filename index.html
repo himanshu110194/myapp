@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <title>Rock Paper Scissors Game</title>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript">
+        var CHOICE = {
+            ROCK     : {value: 1, name: "Rock", code: "R"}, 
+            PAPER    : {value: 2, name: "Paper", code: "P"}, 
+            SCISSORS : {value: 3, name: "Scissors", code: "S"}
+        };
+        var humanWins = 0;
+        var compWins = 0;
+
+        function PlayGame(play) {
+            var humanChoice;
+            var compChoice;
+    
+            if (play==='R') {
+                humanChoice = CHOICE.ROCK;
+            } else if (play==='P') {
+                humanChoice = CHOICE.PAPER;
+            } else if (play==='S') {
+                humanChoice = CHOICE.SCISSORS;
+            }
+    
+            var computer = (Math.floor(Math.random() * 3 + 0.5 ));
+
+                if ( computer === 1 ) {
+                    compChoice = CHOICE.ROCK }
+                else { if ( computer === 2 ) {
+                    compChoice = CHOICE.PAPER }
+                else { 
+                    compChoice = CHOICE.SCISSORS }
+                }
+
+            document.getElementById('result').innerHTML=
+            "Your choice: <span class='h'>" + humanChoice.name + "</span><br><br>Bot's choice: <span class='c'>" + compChoice.name + "</span><br><br>";
+    
+            var win = humanChoice.value - compChoice.value;
+            if ( win === 0 ) { 
+                document.getElementById('result').innerHTML += "Result: <span class='r'>Draw</span>" } 
+            else {
+                if ( win === -2 || win === 1 ) { 
+                    document.getElementById('result').innerHTML += "Result: <span class='r'>You Win</span>"; humanWins++; }
+                else {
+                    if ( win === -1 || win === 2 ) { 
+                        document.getElementById('result').innerHTML += "Result: <span class='r'>Bot Wins</span>"; compWins++; }
+                    else {}
+                }
+            }
+
+            document.getElementById('tally').innerHTML = "<br><right><table cellpadding='7' border='0'><th>You</th><th>Bot</th><tr><td>"+ humanWins +"</td><td>"+ compWins +"</td></tr></table></right>";
+
+            if ( compWins < humanWins ) { 
+                document.getElementById('tally').innerHTML += "<p>You are winning!</p>"; } 
+            else if ( compWins > humanWins ) {
+                document.getElementById('tally').innerHTML += "<p>Bot is winning!</p>"; } 
+            else if ( compWins == humanWins ) {
+                document.getElementById('tally').innerHTML += "<p>Going on a draw!</p>"; }        
+        }
+
+        var watchID = null;
+		function onLoad(){
+		document.addEventListener("deviceready", onDeviceReady, false);
+		}
+		function onDeviceReady() {
+		startWatch();
+		}
+
+		function startWatch() {
+		var options = { frequency: 1000 };
+		watchID = navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+		}
+		function stopWatch() {
+		if (watchID) {
+		navigator.accelerometer.clearWatch(watchID);
+		watchID = null;
+		}
+		}
+		function onSuccess(acceleration) {
+
+			if(Math.round(acceleration.x)==9 || Math.round(acceleration.x)==8 || Math.round(acceleration.x)==7 || Math.round(acceleration.x)==6 || Math.round(acceleration.x)==5 || Math.round(acceleration.x)==4)
+			{
+				PlayGame('R');
+			}
+			else if(Math.round(acceleration.x)==-9 || Math.round(acceleration.x)==-8 || Math.round(acceleration.x)==-7 || Math.round(acceleration.x)==-6 || Math.round(acceleration.x)==-5 || Math.round(acceleration.x)==-4)
+			{
+				PlayGame('P');
+			}
+			else if(Math.round(acceleration.y)==9 || Math.round(acceleration.y)==8 || Math.round(acceleration.y)==7 || Math.round(acceleration.y)==6 || Math.round(acceleration.y)==5 || Math.round(acceleration.y)==4)
+			{
+				PlayGame('S');
+			}
+		}
+
+		function onError() {
+		alert('onError!');
+		}
+        </script>
+        <script type="text/javascript">
+            app.initialize();
+        </script>
+
+    </head>
+	<body onload="onLoad()">
+
+    <h1>Choose from the Arsenal</h1>
+
+    <br>
+<center>
+    <div id="buttons">
+    <input type="image" src="img/stone1.png" />
+    <input type="image" src="img/paper1.png" />
+    <input type="image" src="img/scissor1.png" />
+    </div>
+</center>
+
+    <div id="score">
+    <div id="tresult">
+        <span id="result"></span>
+    </div>
+    <div id="board">
+        <center><span id="tally"></span></center>
+    </div>
+    </div>
+
+    </body>
+</html>
